@@ -1,0 +1,11 @@
+displayName = Money Profits
+author = BasicallyIAmFox
+version = 1.0.0.0
+
+hideCode = false
+hideResources = true
+includeSource = false
+side = Client
+
+homepage = https://github.com/BasicallyIAmFox/MoneyProfits
+buildIgnore = ., *.sln, bin/*, obj*, *.csproj, *.csproj.user, *.json
