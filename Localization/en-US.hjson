@@ -1,6 +1,1 @@
-
-Mods: {
-	MoneyProfits: {
-		Profit: "Profit: {0}"
-	}
-}
+Mods.MoneyProfits.ProfitText: Profit: {0}
