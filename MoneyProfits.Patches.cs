@@ -12,7 +12,7 @@ public partial class MoneyProfits {
 		try {
 			int recipeIndexIndex = -1;
 
-#if TML_2022_09
+#if !TML_2022_09
 			/*
 			// HoverItem = recipe[availableRecipe[num89]].createItem.Clone();
 			IL_2c9e: ldsfld class Terraria.Recipe[] Terraria.Main::recipe
@@ -57,7 +57,7 @@ public partial class MoneyProfits {
 				itemProfitability.RecipeIndex = recipeIndex;
 			});
 		}
-#if !TML_2022_09
+#if TML_2022_09
 		catch (System.Exception exception) {
 			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
 		}
@@ -93,7 +93,7 @@ public partial class MoneyProfits {
 				}
 			});
 		}
-#if !TML_2022_09
+#if TML_2022_09
 		catch (System.Exception exception) {
 			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
 		}

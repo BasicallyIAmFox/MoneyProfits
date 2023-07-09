@@ -36,21 +36,21 @@ public sealed partial class MoneyProfits : Mod {
 
 	public sealed override void Load() {
 #if !TML_2022_09
-		IL.Terraria.Main.DrawInventory += AssignRecipeIndexesToWindow;
-		IL.Terraria.Main.HoverOverCraftingItemButton += AssignRecipeIndexesToList;
-#else
 		IL_Main.DrawInventory += AssignRecipeIndexesToWindow;
 		IL_Main.HoverOverCraftingItemButton += AssignRecipeIndexesToList;
+#else
+		IL.Terraria.Main.DrawInventory += AssignRecipeIndexesToWindow;
+		IL.Terraria.Main.HoverOverCraftingItemButton += AssignRecipeIndexesToList;
 #endif
 	}
 
 	public sealed override void Unload() {
 #if !TML_2022_09
-		IL.Terraria.Main.DrawInventory -= AssignRecipeIndexesToWindow;
-		IL.Terraria.Main.HoverOverCraftingItemButton -= AssignRecipeIndexesToList;
-#else
 		IL_Main.DrawInventory -= AssignRecipeIndexesToWindow;
 		IL_Main.HoverOverCraftingItemButton -= AssignRecipeIndexesToList;
+#else
+		IL.Terraria.Main.DrawInventory -= AssignRecipeIndexesToWindow;
+		IL.Terraria.Main.HoverOverCraftingItemButton -= AssignRecipeIndexesToList;
 #endif
 
 		Instance = null;
