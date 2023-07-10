@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
@@ -20,15 +22,21 @@ public sealed partial class MoneyProfits : Mod {
 					MoneyProfits.Instance, "Profit",
 					Language.GetTextValue(
 						"Mods.MoneyProfits.ProfitText",
-						ProfitCacheLoader.Cache[Main.availableRecipe[RecipeIndex]].ToString()
+						Cache[Main.availableRecipe[RecipeIndex]].ToString()
 					)) {
 					OverrideColor = Color.Gold
 				});
 			}
 		}
 	}
+	private sealed class ProfitCacheLoader : ModSystem {
+		public sealed override void PostSetupRecipes() {
+			Cache = Main.recipe[..Recipe.numRecipes].Select(x => new ProfitCache(x)).ToArray();
+		}
+	}
 
 	public static MoneyProfits Instance { get; private set; }
+	public static ProfitCache[] Cache { get; private set; }
 
 	public MoneyProfits() {
 		Instance = this;
@@ -52,6 +60,9 @@ public sealed partial class MoneyProfits : Mod {
 		IL.Terraria.Main.DrawInventory -= AssignRecipeIndexesToWindow;
 		IL.Terraria.Main.HoverOverCraftingItemButton -= AssignRecipeIndexesToList;
 #endif
+
+		if (Cache != null)
+			Array.Clear(Cache);
 
 		Instance = null;
 	}

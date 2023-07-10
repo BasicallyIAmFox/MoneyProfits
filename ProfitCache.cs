@@ -8,32 +8,21 @@ public readonly struct ProfitCache {
 	private const ulong ZeroMinusOne = unchecked(0ul - 1ul);
 
 	private readonly string asString;
-#if DEBUG
-	private readonly ulong lower;
-	private readonly ulong itemValue;
-#endif
 
 	public ProfitCache(Recipe recipe) {
 		// Calculate item value.
-#if !DEBUG
-		ulong
-#endif
-		itemValue = CalculateValue(recipe.createItem);
+		ulong itemValue = CalculateValue(recipe.createItem);
 
 		// Calculate ingredients total value.
 		ulong ingredientsValue = 0;
 		foreach (var ingredient in recipe.requiredItem) {
+			// Perhaps should somehow support recipe groups later...
+			// But on other hand, they simply add their "iconic item" as ingredient
+			// I really don't know what to do about them, to be honest.
 			ingredientsValue += CalculateValue(ingredient);
 		}
 
-		// Perhaps should somehow support recipe groups later...
-		// But on other hand, they simply add their "iconic item" as ingredient
-		// I really don't know what to do about them, to be honest.
-
-#if !DEBUG
-		ulong
-#endif
-		lower = itemValue - ingredientsValue;
+		ulong lower = itemValue - ingredientsValue;
 
 		// Make a string, so we don't have to re-make it every single draw tick.
 		asString = GetString(lower, itemValue);
@@ -44,13 +33,7 @@ public readonly struct ProfitCache {
 		}
 	}
 
-	public override readonly string ToString() {
-#if DEBUG
-		return GetString(lower, itemValue);
-#else
-		return asString;
-#endif
-	}
+	public override readonly string ToString() => asString;
 
 	private static string GetString(ulong lower, ulong itemValue) {
 		ulong upper = (lower > itemValue) ? ZeroMinusOne : 0UL;
@@ -60,7 +43,7 @@ public readonly struct ProfitCache {
 			ColorFromCoinValue((upper, lower)).ToString("X6"),
 
 			lowerAsLong < 0 ? "-" : (lowerAsLong == 0 ? "" : "+"),
-			OrIfEmpty(CoinsToName(Math.Abs(lowerAsLong)), "0 Copper").ToString()
+			OrIfEmpty(EfficientCoinsToName(Math.Abs(lowerAsLong)), $"0 {Language.GetTextValue("Currency.Copper")}").ToString()
 		);
 
 		static uint ColorFromCoinValue((ulong upper, ulong lower) value) {
@@ -80,66 +63,38 @@ public readonly struct ProfitCache {
 
 			bool IsNegative() => (long)value.upper < 0;
 
-			bool IsLeftGreaterThanZero() {
-				if (IsNegative() == false) {
-					return value.lower > 0;
-				}
+			bool IsLeftGreaterThanZero() => !IsNegative() && value.lower > 0;
 
-				return false;
-			}
-
-			bool IsLeftLesserThanZero() {
-				if (IsNegative() == false) {
-					return value.lower < 0;
-				}
-
-				return IsNegative();
-			}
+			bool IsLeftLesserThanZero() => IsNegative() || value.lower < 0;
 		}
 
-		static ReadOnlySpan<char> OrIfEmpty(in ReadOnlySpan<char> value, in ReadOnlySpan<char> other) {
-			if (value.IsEmpty)
-				return other;
-			return value;
-		}
+		static ReadOnlySpan<char> OrIfEmpty(in ReadOnlySpan<char> input, in ReadOnlySpan<char> value) => input.IsEmpty ? value : input;
 	}
 
-	// The only reason this method exists is because PopupText.ValueToName in 1.4.3 takes 32-bit integer instead of 64-bit.
-	private static string CoinsToName(long coinValue) {
+	private static string EfficientCoinsToName(long coinValue) {
 		int platinum = 0;
 		int gold = 0;
 		int silver = 0;
 		int copper = 0;
 
-		while (coinValue > 0) {
-			if (coinValue >= 1000000) {
-				coinValue -= 1000000;
-				platinum++;
-			}
-			else if (coinValue >= 10000) {
-				coinValue -= 10000;
-				gold++;
-			}
-			else if (coinValue >= 100) {
-				coinValue -= 100;
-				silver++;
-			}
-			else if (coinValue >= 1) {
-				coinValue--;
-				copper++;
-			}
-		}
+		coinValue -= (platinum	+= (int)(coinValue / 1000000)) * 1000000;
+		coinValue -= (gold		+= (int)(coinValue / 10000	)) * 10000;
+		coinValue -= (silver	+= (int)(coinValue / 100	)) * 100;
+		copper += (int)coinValue;
 
 		string text = string.Empty;
 		if (platinum > 0) {
 			text += platinum + string.Format(" {0} ", Language.GetTextValue("Currency.Platinum"));
 		}
+
 		if (gold > 0) {
 			text += gold + string.Format(" {0} ", Language.GetTextValue("Currency.Gold"));
 		}
+
 		if (silver > 0) {
 			text += silver + string.Format(" {0} ", Language.GetTextValue("Currency.Silver"));
 		}
+
 		if (copper > 0) {
 			text += copper + string.Format(" {0} ", Language.GetTextValue("Currency.Copper"));
 		}
@@ -147,6 +102,7 @@ public readonly struct ProfitCache {
 		if (text.Length > 1) {
 			text = text[..^1];
 		}
+
 		return text;
 	}
 }

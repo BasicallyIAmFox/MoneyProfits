@@ -57,13 +57,13 @@ public partial class MoneyProfits {
 				itemProfitability.RecipeIndex = recipeIndex;
 			});
 		}
-#if TML_2022_09
-		catch (System.Exception exception) {
-			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
-		}
-#else
+#if !TML_2022_09
 		catch {
 			Terraria.ModLoader.MonoModHooks.DumpIL(Instance, il);
+		}
+#else
+		catch (System.Exception exception) {
+			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
 		}
 #endif
 	}
@@ -93,13 +93,13 @@ public partial class MoneyProfits {
 				}
 			});
 		}
-#if TML_2022_09
-		catch (System.Exception exception) {
-			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
-		}
-#else
+#if !TML_2022_09
 		catch {
 			Terraria.ModLoader.MonoModHooks.DumpIL(Instance, il);
+		}
+#else
+		catch (System.Exception exception) {
+			Instance.Logger.Error($"Failed to patch {il.Body.Method.FullName}. Stack trace: {exception.Message}");
 		}
 #endif
 	}
