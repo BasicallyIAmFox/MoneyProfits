@@ -1,6 +1,6 @@
 displayName = Money Profits
 author = BasicallyIAmFox
-version = 1.0.0.3
+version = 1.0.0.5
 
 hideCode = false
 hideResources = true
