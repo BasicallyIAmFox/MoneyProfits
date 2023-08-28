@@ -9,5 +9,3 @@ side = Client
 
 homepage = https://github.com/BasicallyIAmFox/MoneyProfits
 buildIgnore = ., *.sln, bin/*, obj*, *.csproj, *.csproj.user, *.json
-
-weakReferences = BetterCrafting, MagicStorage, SimpleUILib
