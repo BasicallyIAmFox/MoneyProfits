@@ -77,9 +77,9 @@ public readonly struct ProfitCache {
 		int silver = 0;
 		int copper = 0;
 
-		coinValue -= (platinum	+= (int)(coinValue / 1000000)) * 1000000;
-		coinValue -= (gold		+= (int)(coinValue / 10000	)) * 10000;
-		coinValue -= (silver	+= (int)(coinValue / 100	)) * 100;
+		coinValue -= (platinum += (int)(coinValue / 1000000)) * 1000000;
+		coinValue -= (gold += (int)(coinValue / 10000)) * 10000;
+		coinValue -= (silver += (int)(coinValue / 100)) * 100;
 		copper += (int)coinValue;
 
 		string text = string.Empty;
